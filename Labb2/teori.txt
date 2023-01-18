@@ -1,0 +1,102 @@
+1. Formulera rekursionen (partDist i programmet) så kompakt som möjligt med matematisk notation:
+
+f(x, y, 0, w) = y
+f(x, y, z, 0) = x
+
+g(x, y, z, w) = {
+  0 , x[z-1] == y[w-1]
+  1 , x[z-1] != y[w-1]
+}
+
+
+f(x, y, z, w) = min( {
+
+  (f(x, y, z-1, w-1) + g(x, y, z, w)),
+  f(x, y, z-1, w-1) + 1,
+  f(x, y, z, w) + 1
+
+})
+
+
+2. Beräkna partDist("labd", "blad", x, y) för alla x och y mellan 0 och 4 och för in värdena i en matris M. Vad blir M?
+
+partDist("labd", "blad", x, y) där x,y = {0,1,2,3,4}
+
+M  =
+    [x "" l  a  b  d
+  y ""[0, 1, 2, 3, 4],
+    b [1, 1, 2, 2, 3],
+    l [2, 1, 2, 3, 3],
+    a [3, 2, 1, 2, 3],
+    d [4, 3, 2, 2, 2],
+
+    ]
+
+  3. Vad är det alltså metoden partDist(w1, w2, x, y) beräknar?
+
+  Editeringsavståndet mellan w1 och w2 alltså antal bokstavsoperationer som krävs för att göra de lika
+
+
+  4. Visa att tidskomplexiteten för Distance(w1, w2) är exponentiell i ordlängden. Du kan anta att w1 och w2 har samma längd.
+
+  I varje förgrening av rekursionen så görs det tre rekursionscall på partDist vilken för n = 1 -> 3^1 funktionsanrop innan basfallet avslutar.
+  Best case sker när ett ord är av längd 0 och basfallet ger konstant tid.
+  Worst case så sker 3^n funktionsanrop på partDist där n är ordens längd.
+
+  5. Visa hur man kan spåra vilka editeringsoperationer som görs i den kortaste editeringsföljden från "labd" till "blad" genom att titta på matrisen M.
+
+  För M[4,4] så ges att 2 operationer är nödvändiga för att byta "labd" -> "blad"-
+  Först ta bort "b" i "ladb" -> lad (1) sedan lägga till "b" -> blad (2)
+
+  För M[3,4] så ges att det krävs ytterligare 1 operation vilket visar att det krävs att det läggs till en bokstav i slutet på "bla".
+
+  För M[3,3] = så krävs 2 operationer vilket är att ta bort "b" från lab" -> "la" (1) och sedan lägga till "b" -> "bla" (2)
+
+  Så ett steg uppåt innebär att en bokstav läggs till.
+  Ett steg till vänster är att ta bort en bokstav.
+
+
+  6. Visa med pseudokod hur rekursionen kan beräknas med dynamisk programmering, dvs hur en dynprogmatris M kan skapas. Vilken beräkningsordning är lämplig vid beräkning av M?
+
+  M[i, j]  // Matris med i x j storlek
+
+  for a = 1 to i do
+    M[a,0] = a          // Om word1 är tomt
+  for b = 1 to j do
+      M[0,b] = b        // Om word2 är tomt
+
+  for a = 1 to j
+      for b = 1 to i
+      if w1[a] == w2[b] then    // Om det inte är någon förändring från föregående rekursionssteg
+        M[a, b] = M[a-1, b-1]
+
+      else
+        res <- min( M[a-1, b-1] + 1, M[a-1, b] + 1, M[a, b-1] + 1 ) // Minsta av: byte , lägga till, ta bort
+        M[a, b] = res  // Innerhåller minsta antal operationer som krävs
+
+
+7. Analysera tidskomplexiteten för att bestämma editeringsavståndet mellan ett n-bokstavsord och ett m-bokstavsord med dynamisk programmering.
+
+Tidskomplexitet kommer att bli O(n*m) då det totalt för algoritmen kommer krävas (t + n + m + n*m) där det tar t för att konstruera själva matrisen och sedan gå igenomen basfallen tillsammans med två nästlade loopar.
+n*m är den asymptotiska komplexiteten.
+
+
+8.Beräkna dynprogmatrisen för editeringsavståndet mellan "labs" och "blad".
+
+M  =
+    [x "" l  a  b  s
+  y ""[0, 1, 2, 3, 4],
+    b [1, 1, 2, 2, 3],
+    l [2, 1, 2, 3, 3],
+    a [3, 2, 1, 2, 3],
+    d [4, 3, 2, 2, 3],
+
+    ]
+
+9. Vilken del av matriserna för "labd"-"blad" och "labs"-"blad" skiljer?
+
+M[4,4] då en ytterligare operation krävs för att ta bort "s" sedan flytta "b" och till sist lägga till "d"
+
+10. Allmänt sett, vilken del av matriserna för Y-X och Z-X skiljer när orden Y och Z har samma första p bokstäver?
+
+Delarna där indexen för matriserna är större än p.

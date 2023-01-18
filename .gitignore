@@ -1,0 +1,16 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/out/
+*.class
+*.iml
+*kattis
+*Kattis
+Labb1\src\korpus
+Labb1\src\I1_file
+Labb1\src\I2_file
+I1_file
+I2_file
+korpus
+Kattis
+kattis
